@@ -1,4 +1,6 @@
 import requests
+from send_email import send_email
+
 
 # to access api_key from newsapi.org
 api_key = "fc3a2e50528c42deb19763e8e2cd0113"
@@ -13,8 +15,15 @@ request = requests.get(url)
 
 # to get output as dict replace .text to .json()
 content = request.json()
+print(content)
 
-# to access articles, titles (check dict-list structure in debugger)
+
+body = ""
+# to access article - titles & description (check output structure in debugger)
 for article in content["articles"]:
-	print(article["title"])
-	print(article["description"])
+	if article["title"] is not None:
+		body = f"{body}\nTitle: {article["title"]}\n"\
+			   f"Description: {article["description"]}\n\n"
+
+body = body.encode("utf-8")
+send_email(message=body)
